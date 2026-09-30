@@ -18,15 +18,30 @@ def encrypt_caesar(plaintext):
 
     Add more implementation details here.
     """
-    raise NotImplementedError  # Your implementation here
-
+    ciphertext = ""
+    ordA = ord('A')
+    for c in plaintext:
+        o = ord(c) - ordA
+        if o in range(0,26):
+            o = ((o + 3) % 26) + ordA
+            c = chr(o)
+        ciphertext += c
+    return ciphertext
 
 def decrypt_caesar(ciphertext):
     """Decrypt a ciphertext using a Caesar cipher.
 
     Add more implementation details here.
     """
-    raise NotImplementedError  # Your implementation here
+    plaintext = ""
+    ordA = ord('A')
+    for c in ciphertext:
+        o = ord(c) - ordA
+        if o in range(0,26):
+            o = ((o - 3) % 26) + ordA
+            c = chr(o)
+        plaintext += c
+    return plaintext
 
 
 # Vigenere Cipher
@@ -36,7 +51,16 @@ def encrypt_vigenere(plaintext, keyword):
 
     Add more implementation details here.
     """
-    raise NotImplementedError  # Your implementation here
+    ciphertext = ""
+    ordA = ord('A')
+    for i in range(0, len(plaintext)):
+        o = ord(plaintext[i]) - ordA
+        key = ord(keyword[i % len(keyword)]) - ordA
+        if o in range(0,26) and key in range(0, 26):
+            o = ((o + key) % 26) + ordA
+            c = chr(o)
+        ciphertext += c
+    return ciphertext
 
 
 def decrypt_vigenere(ciphertext, keyword):
@@ -44,7 +68,16 @@ def decrypt_vigenere(ciphertext, keyword):
 
     Add more implementation details here.
     """
-    raise NotImplementedError  # Your implementation here
+    plaintext = ""
+    ordA = ord('A')
+    for i in range(0, len(ciphertext)):
+        o = ord(ciphertext[i]) - ordA
+        key = ord(keyword[i % len(keyword)]) - ordA
+        if o in range(0,26) and key in range(0, 26):
+            o = ((o - key) % 26) + ordA
+            c = chr(o)
+        plaintext += c
+    return plaintext
 
 
 # Merkle-Hellman Knapsack Cryptosystem
