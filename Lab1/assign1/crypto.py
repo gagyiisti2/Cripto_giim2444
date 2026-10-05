@@ -161,3 +161,80 @@ def decrypt_mh(message, private_key):
     """
     raise NotImplementedError  # Your implementation here
 
+def encrypt_scytale(plaintext, circumference):
+    ciphertext = ""
+    act = 0
+    n = len(plaintext)
+    for i in range(0, n):
+        ciphertext += plaintext[act]
+        if (act  + circumference) < len(plaintext):
+            act += circumference
+        else:
+            act = act % circumference + 1
+    return ciphertext
+
+def decrypt_scytale(ciphertext, circumference):
+    n = len(ciphertext)
+    plaintext = ""
+    rows = n // circumference
+    rest = n % circumference
+    pos = 0
+    for i in range(n):
+        plaintext += ciphertext[pos]
+        if(i % circumference < rest): pos += rows + 1
+        else: pos += rows
+        if pos >= n : pos -= n - 1 
+    return plaintext
+
+def encrypt_railfence(plaintext, num_rails):
+    ciphertext = ""
+    n = len(plaintext)
+    if num_rails <= 1 or num_rails >= n:
+        return plaintext
+    cycle = 2 * (num_rails - 1)
+    for rail in range(num_rails):
+        # szamoljuk a tavolsagokat egy sorban
+        # minden ciklus 2x erint egy sort
+        # tavolsagok valtakoznak az iranytol hogy le-fel | fel-le megyunk
+        gaps = []
+        if(cycle - 2 * rail) > 0:
+            gaps.append(cycle - 2 * rail)
+        if(rail * 2) > 0:
+            gaps.append(2 * rail)
+        pos = rail
+        k = 0
+        while(pos < n):
+            ciphertext += plaintext[pos]
+            pos += gaps[k % len(gaps)]
+            k += 1
+    return ciphertext
+
+def decrypt_railfence(ciphertext, num_rails):
+    n = len(ciphertext)
+    if(num_rails <= 1 or num_rails >= n):
+        return ciphertext
+    
+    cycle = 2 * (num_rails - 1)
+    
+    # melyik pozicio melyik sorba tart:
+    pattern = []
+    for i in range(n):
+        pos = i % cycle
+        pattern.append(pos if pos < num_rails else cycle - pos)
+   
+    # ki kell szamolni egy-egy sorban hany karakter van, es felosztjuk olyan hosszra
+    rails = []
+    pos = 0
+    for r in range(num_rails):
+        length = pattern.count(r)
+        rails.append(ciphertext[pos:pos + length])
+        pos += length
+
+    # dekodoljuk a szoveget
+    plaintext = ""
+    used = [0] * num_rails
+    for r in pattern: # a minta alapjan
+        plaintext += rails[r][used[r]]
+        used[r] += 1
+        
+    return plaintext
