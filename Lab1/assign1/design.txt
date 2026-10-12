@@ -5,10 +5,16 @@ In 1-3 sentences per section, comment on your approach to each of the parts of t
 
 
 # Caesar Cipher
-
+Az otlet az volt, hogy a stringen vegigmentem es minden betujet eltoltam 3-al, ugyelve arram, hogyha tul lepnem az ABC-t akkor visszaforduljon.
+A visszafejtes is hasonloan tortent, kihasznalva mindkettonel 3 betu az elteres.
 
 # Vigenere Cipher
+Hasonloan dolgoztam mint a Ceasarnal, csak mostmar a megadott kulcs hosszaval titkositottam nem a default 3-al.
 
+# scytale
+Itt az enkriptalasnal az otlet az volt, hogy mindig leptem annyit, amennyi periodus hossza.
+A visszafejtesnel kisse maskepp kellett dolgozni, ott megszamoltam hogy mennyi sor van az oszlopokban es azt figyelembe veve fejtettem vissza a plaintextet.
 
-# Merkle-Hellman Knapsack Cryptosystem
-
+# railfence
+Itt az enkriptalasnal soronkent probaltam haladni lefele, es ugy felepiteni a stringet, es egy egy lepes fuggott attol hogy epp a ciklus aljan vagy tetejen mentem at.
+A visszafejtesnel meg azt szamoltam ki, hogy mi melyik pozicioba kerul, milyen hosszu egy-egy sor, es annak megfeleloen vissza tudtam fejteni a megoldast.

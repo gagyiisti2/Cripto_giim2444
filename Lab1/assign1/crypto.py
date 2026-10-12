@@ -14,10 +14,8 @@ import utils
 # Caesar Cipher
 
 def encrypt_caesar(plaintext):
-    """Encrypt plaintext using a Caesar cipher.
-
-    Add more implementation details here.
-    """
+    if not isinstance(plaintext, str):
+        raise TypeError("plaintext must be a string")
     ciphertext = ""
     ordA = ord('A')
     for c in plaintext:
@@ -29,10 +27,8 @@ def encrypt_caesar(plaintext):
     return ciphertext
 
 def decrypt_caesar(ciphertext):
-    """Decrypt a ciphertext using a Caesar cipher.
-
-    Add more implementation details here.
-    """
+    if not isinstance(ciphertext, str):
+        raise TypeError("plaintext must be a string")
     plaintext = ""
     ordA = ord('A')
     for c in ciphertext:
@@ -43,14 +39,21 @@ def decrypt_caesar(ciphertext):
         plaintext += c
     return plaintext
 
+# Ceasar in bytes
+def encrypt_ceasar_bytes(data):
+    return bytes((b + 3) % 256 for b in data)
+
+def decrypt_ceasar_bytes(encrypted_data):
+    return bytes((b - 3) % 256 for b in encrypted_data)     
+
 
 # Vigenere Cipher
 
 def encrypt_vigenere(plaintext, keyword):
-    """Encrypt plaintext using a Vigenere cipher with a keyword.
-
-    Add more implementation details here.
-    """
+    if not isinstance(plaintext, str):
+        raise TypeError("plaintext must be a string")
+    if not keyword or not keyword.isalpha():
+        raise ValueError("keyword must be a non-empty string of letters")
     ciphertext = ""
     ordA = ord('A')
     for i in range(0, len(plaintext)):
@@ -64,10 +67,10 @@ def encrypt_vigenere(plaintext, keyword):
 
 
 def decrypt_vigenere(ciphertext, keyword):
-    """Decrypt ciphertext using a Vigenere cipher with a keyword.
-
-    Add more implementation details here.
-    """
+    if not isinstance(ciphertext, str):
+        raise TypeError("plaintext must be a string")
+    if not keyword or not keyword.isalpha():
+        raise ValueError("keyword must be a non-empty string of letters")
     plaintext = ""
     ordA = ord('A')
     for i in range(0, len(ciphertext)):
@@ -162,6 +165,8 @@ def decrypt_mh(message, private_key):
     raise NotImplementedError  # Your implementation here
 
 def encrypt_scytale(plaintext, circumference):
+    if not isinstance(plaintext, str):
+        raise TypeError("plaintext must be a string")
     ciphertext = ""
     act = 0
     n = len(plaintext)
@@ -174,6 +179,8 @@ def encrypt_scytale(plaintext, circumference):
     return ciphertext
 
 def decrypt_scytale(ciphertext, circumference):
+    if not isinstance(ciphertext, str):
+        raise TypeError("plaintext must be a string")
     n = len(ciphertext)
     plaintext = ""
     rows = n // circumference
@@ -187,6 +194,8 @@ def decrypt_scytale(ciphertext, circumference):
     return plaintext
 
 def encrypt_railfence(plaintext, num_rails):
+    if not isinstance(plaintext, str):
+        raise TypeError("plaintext must be a string")
     ciphertext = ""
     n = len(plaintext)
     if num_rails <= 1 or num_rails >= n:
@@ -210,6 +219,8 @@ def encrypt_railfence(plaintext, num_rails):
     return ciphertext
 
 def decrypt_railfence(ciphertext, num_rails):
+    if not isinstance(ciphertext, str):
+        raise TypeError("plaintext must be a string")
     n = len(ciphertext)
     if(num_rails <= 1 or num_rails >= n):
         return ciphertext
@@ -236,5 +247,6 @@ def decrypt_railfence(ciphertext, num_rails):
     for r in pattern: # a minta alapjan
         plaintext += rails[r][used[r]]
         used[r] += 1
-        
+
     return plaintext
+
