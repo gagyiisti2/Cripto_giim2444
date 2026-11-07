@@ -67,18 +67,18 @@ def encrypt_vigenere(plaintext, keyword):
 
 
 def decrypt_vigenere(ciphertext, keyword):
-    if not isinstance(ciphertext, str):
-        raise TypeError("plaintext must be a string")
-    if not keyword or not keyword.isalpha():
-        raise ValueError("keyword must be a non-empty string of letters")
+    #if not isinstance(ciphertext, str):
+    #    raise TypeError("plaintext must be a string")
+    #if not keyword or not keyword.isalpha():
+    #    raise ValueError("keyword must be a non-empty string of letters")
     plaintext = ""
     ordA = ord('A')
     for i in range(0, len(ciphertext)):
+        c = ciphertext[i] 
         o = ord(ciphertext[i]) - ordA
         key = ord(keyword[i % len(keyword)]) - ordA
         if o in range(0,26) and key in range(0, 26):
-            o = ((o - key) % 26) + ordA
-            c = chr(o)
+            c = ((o - key) % 26) + ordA
         plaintext += c
     return plaintext
 
@@ -249,4 +249,3 @@ def decrypt_railfence(ciphertext, num_rails):
         used[r] += 1
 
     return plaintext
-
