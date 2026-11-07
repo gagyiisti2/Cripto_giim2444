@@ -1,0 +1,8 @@
+{
+  "blocksize": 8,
+  "cipher": "DES",
+  "key": "MTIzNDU2Nzg=",
+  "mode": "CBC",
+  "iv": "AAECAwQFBgc=",
+  "padding": "SF"
+}
