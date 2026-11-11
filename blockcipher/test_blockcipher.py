@@ -3,6 +3,9 @@ import random
 import os
 import pytest
 import blockcipher as bc
+import paddings as p
+import processmodes as mod
+import ciphers as c
 
 from Crypto.Cipher import DES
 
@@ -26,7 +29,7 @@ def make_cfg(cipher, mode, padding="SF"):
 
 # A kep oda-vissza alakitasa kul. modszerekkel
 @pytest.mark.parametrize("cipher", SETUPS)
-@pytest.mark.parametrize("mode", bc.MODES)
+@pytest.mark.parametrize("mode", mod.MODES)
 def test_real_file_roundtrip(cipher, mode, tmp_path):
     assert os.path.getsize(IMG) >= 1_000_000
     cfg = make_cfg(cipher, mode)
@@ -36,30 +39,30 @@ def test_real_file_roundtrip(cipher, mode, tmp_path):
     assert out.read_bytes() == open(IMG, "rb").read()
 
 # Paddingek tesztelese
-@pytest.mark.parametrize("padding", bc.PADDINGS)
+@pytest.mark.parametrize("padding", p.PADDINGS)
 @pytest.mark.parametrize("size", [0, 1, 7, 8, 9, 16, 17])
 def test_padding_roundtrip(padding, size):
     data = bytes(range(1, size + 1))
-    padded = bc.pad(data, 8, padding)
+    padded = p.pad(data, 8, padding)
     assert len(padded) % 8 == 0
-    assert bc.unpad(padded, 8, padding) == data
+    assert p.unpad(padded, 8, padding) == data
 
 def test_padding_formats():
-    assert bc.pad(b"abc", 8, "ZERO") == b"abc" + b"\x00" * 5
-    assert bc.pad(b"abc", 8, "DES") == b"abc" + b"\x80" + b"\x00" * 4
-    assert bc.pad(b"abc", 8, "SF") == b"abc" + b"\x05" * 5
-    assert bc.pad(b"12345678", 8, "SF") == b"12345678" + b"\x08" * 8
+    assert p.pad(b"abc", 8, "ZERO") == b"abc" + b"\x00" * 5
+    assert p.pad(b"abc", 8, "DES") == b"abc" + b"\x80" + b"\x00" * 4
+    assert p.pad(b"abc", 8, "SF") == b"abc" + b"\x05" * 5
+    assert p.pad(b"12345678", 8, "SF") == b"12345678" + b"\x08" * 8
 
 
 # Szabvanyos-e a DES
 def test_des_known_vector():
-    enc, dec = bc.make_cipher("DES", bytes.fromhex("133457799BBCDFF1"), 8)
+    enc, dec = c.make_cipher("DES", bytes.fromhex("133457799BBCDFF1"), 8)
     pt = bytes.fromhex("0123456789ABCDEF")
     assert enc(pt) == bytes.fromhex("85E813540F0AB405")
     assert dec(enc(pt)) == pt
  
 def test_vigenere_block():
-    enc, dec = bc.make_cipher("VIGENERE-BIN", b"\x0f\xf0", 4)
+    enc, dec = c.make_cipher("VIGENERE-BIN", b"\x0f\xf0", 4)
     assert enc(b"\x00\x00\x00\x00") == b"\x0f\xf0\x0f\xf0"
     assert dec(enc(b"abcd")) == b"abcd"
 
@@ -74,12 +77,12 @@ def test_vigenere_block():
 def test_modes_match_library(mode, lib):
     cfg = make_cfg("DES", mode)
     data = random.Random(7).randbytes(100)
-    expected = lib(cfg.key, cfg.iv).encrypt(bc.pad(data, 8, "SF"))
+    expected = lib(cfg.key, cfg.iv).encrypt(p.pad(data, 8, "SF"))
     assert bc.encrypt_bytes(cfg, data) == expected
  
  
 def test_ctr_counter_increments_and_wraps():
-    enc, dec = bc.make_cipher("DES", b"12345678", 8)
+    enc, dec = c.make_cipher("DES", b"12345678", 8)
     cfg = bc.parse_config(dict(blocksize=8, cipher="DES", key=b64(b"12345678"),
                                mode="CTR", padding="ZERO", iv=b64(b"\xff" * 8)))
     ct = bc.encrypt_bytes(cfg, bytes(16))
