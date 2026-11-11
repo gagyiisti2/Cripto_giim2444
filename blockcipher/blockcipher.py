@@ -92,17 +92,3 @@ def decrypt_file(cfg: CipherConfig, src: str, dst: str) -> None:
         data = f.read()
     with open(dst, "wb") as f:
         f.write(decrypt_bytes(cfg, data))
-
-def main(argv: Optional[list[str]] = None) -> int:
-    p = argparse.ArgumentParser(description="Block cipher driven by JSON configuration")
-    p.add_argument("action", choices=("encrypt", "decrypt"))
-    p.add_argument("config")
-    p.add_argument("input")
-    p.add_argument("output")
-    args = p.parse_args(argv)
-    cfg = load_config(args.config)
-    (encrypt_file if args.action == "encrypt" else decrypt_file)(cfg, args.input, args.output)
-    return 0
-
-if __name__ == "__main__":
-    raise SystemExit(main())
